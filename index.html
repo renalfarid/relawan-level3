@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="INIMI BARRU 2024 Perubahan semakin tertata Hj Andi Ina Kartika Sari - Abustan.">
+    <title>Relawan Level 3 - TPS</title>
+
+    <link rel="icon" type="image/x-icon" href="/assets/images/inimibarru.ico">
+    <link href="./assets/css/font-family.css" rel="stylesheet">
+    <link href="./assets/css/flowbit-min.css" rel="stylesheet" />
+    <script src="./assets/js/tailwind.min.js"></script>
+    <script src="./assets/js/flowbit.min.js"></script>
+
+    <style>
+        body {
+          font-family: 'Montserrat', sans-serif;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <header class="bg-gradient-to-r from-yellow-300 to-orange-400 p-4">
+        <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+                <div class="md:flex md:items-center md:gap-12">
+                    <a class="block text-teal-600" href="/">
+                      <span class="sr-only">Home</span>
+                      <img src="/assets/images/logo.png" width="150" height="150" alt="Logo" />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="mt-4 text-center mb-6">
+        <h2 class="font-bold text-xl">Form Data Relawan Level 3 / TPS</h2>
+    </div>
+
+    <!-- STEP NAVIGATION -->
+    <section class="mt-4 p-6 max-w-md mx-auto">
+        <ol id="step-indicator" class="flex items-center justify-between w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
+            <li id="step-1-indicator" class="flex items-center text-blue-600 dark:text-blue-500 flex-grow">
+                <span class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                    </svg>
+                    Pilih <span class="hidden sm:inline-flex sm:ms-2">Wilayah</span>
+                </span>
+            </li>
+            <li id="step-2-indicator" class="flex items-center flex-grow">
+                <span class="me-2">2</span>
+                Isi Data Relawan
+            </li>
+            <li id="step-3-indicator" class="flex items-center flex-grow">
+                <span class="me-3">3</span>
+                Selesai
+            </li>
+        </ol>        
+    </section>    
+
+    <!-- FORM STEP 1 -->
+    <section id="form-step-1" class="mt-2 p-6">
+        <!-- The previous form for selecting Wilayah -->
+        <div class="col-span-2">
+          <label for="provinsi" class="block text-sm font-medium text-gray-700">Provinsi</label>
+          <select id="provinsi" name="provinsi" onchange="checkFormCompletion()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option value="">Pilih Provinsi</option>
+          </select>
+        </div>
+      
+        <div class="mt-4">
+          <label for="kabupaten" class="block text-sm font-medium text-gray-700">Kota / Kabupaten</label>
+          <select id="kabupaten" name="kabupaten" disabled onchange="checkFormCompletion()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option value="">Pilih Kabupaten</option>
+          </select>
+        </div>
+      
+        <div class="mt-4">
+          <label for="kecamatan" class="block text-sm font-medium text-gray-700">Kecamatan</label>
+          <select id="kecamatan" name="kecamatan" disabled onchange="checkFormCompletion()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option value="">Pilih Kecamatan</option>
+          </select>
+        </div>
+      
+        <div class="mt-4">
+          <label for="kelurahan" class="block text-sm font-medium text-gray-700">Desa / Kelurahan</label>
+          <select id="kelurahan" name="kelurahan" disabled onchange="checkFormCompletion()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option value="">Pilih Kelurahan</option>
+          </select>
+        </div>
+      
+        <div class="mt-4">
+          <label for="korcam" class="block text-sm font-medium text-gray-700">Nama Korcam</label>
+          <select id="korcam" name="korcam" disabled onchange="checkFormCompletion()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option value="">Pilih Korcam</option>
+          </select>
+        </div>
+      
+        <div class="mt-4">
+          <label for="korlu" class="block text-sm font-medium text-gray-700">Nama Korlu</label>
+          <select id="korlu" name="korlu" disabled onchange="checkFormCompletion()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option value="">Pilih Korlu</option>
+          </select>
+        </div>
+      
+        <div class="col-span-2 mt-4">
+          <button type="button" id="nextButton" onclick="showNextStep(1)" class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-700" disabled>
+            Selanjutnya
+          </button>
+        </div>
+      </section>
+      
+
+    <!-- FORM STEP 2 -->
+    <section id="form-step-2" class="mt-8 p-6 hidden">
+        <form id="formNik" class="max-w-md mx-auto mb-4">   
+            <label for="nik" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Cari</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                </div>
+                <input type="nik" id="nik" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukkan NIK.." required />
+                <button type="submit" id="cariBtn" class="text-white absolute end-2.5 bottom-2.5 bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800">Cari</button>
+            </div>
+        </form>
+    </section>
+
+    <section id="form-step-3" class="mt-8 p-6 hidden">
+      <!-- Congratulations area starts -->
+        <div class="congratulation-area text-center mt-2">
+            <div class="container mx-auto">
+                <div class="congratulation-wrapper mx-auto max-w-lg bg-white shadow-lg rounded-lg p-8">
+                    <div class="congratulation-contents text-center">
+                        <div class="mx-auto flex items-center justify-center mb-2">
+                            <img src="/assets/images/logo.png" />
+                        </div>
+                        <h4 class="text-2xl font-bold text-gray-800 mb-2">Selamat!</h4>
+                        <p class="text-base text-gray-600 mb-6">Telah bergabung sebagai Koordinator TPS INIMI BARRU 2024.</p>
+                        <div class="btn-wrapper mt-4">
+                            <a href="/" class="cmn-btn btn-bg-1 bg-orange-700 text-white px-6 py-2 rounded-lg hover:bg-orange-700">
+                                Beranda
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Congratulations area end -->
+
+    </section>
+    <section id="pemilih"></section>
+    <section id="formData"></section>
+    <section id="konfirmasiData"></section>
+    <section id="errorData"></section>
+
+    </section>
+    <script src="./assets//js/relawan.js"></script>
+    <script src="./assets/js/formRelawan.js"></script>
+</body>
+</html>
