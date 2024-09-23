@@ -1,4 +1,4 @@
-const apiUrl = 'http://127.0.0.1:3010'
+const apiUrl = 'https://formlv3.inimibarru.com/api'
 let dataRelawan = {}
 let formDataRelawan = {}
 
