@@ -41,6 +41,7 @@ function showNextStep(currentStep) {
     if (currentStep === 2) {
       // Move back from step 2 to step 1
       document.getElementById('form-step-2').classList.add('hidden');
+      document.getElementById('formData').classList.add('hidden');
       document.getElementById('form-step-1').classList.remove('hidden');
       
       // Update step indicators
@@ -163,6 +164,7 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
   dataRelawan.noKtp = nik
   
   if (!data.status_nik) {
+    document.getElementById('formData').classList.remove('hidden');
     document.getElementById('formData').innerHTML = `
       <form id="formDataDiri" class="max-w-xl mx-auto grid grid-cols-1 gap-4 sm:grid-cols-2">
     
@@ -207,7 +209,7 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
 
     <div class="sm:col-span-2 flex justify-between mt-4">
       <!-- Back Button -->
-      <button type="button" onclick="showPreviousStep()" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+      <button type="button" onclick="showPreviousStep(2)" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
         Kembali
       </button>
 
