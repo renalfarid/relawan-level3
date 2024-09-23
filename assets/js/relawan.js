@@ -153,7 +153,6 @@ document.addEventListener('DOMContentLoaded', function() {
      // Event Listener for Kecamatan Select
      korcamSelect.addEventListener('change', function() {
         const korcamId = this.value;
-        console.log("korcam id", korcamId)
         if (korcamId) {
             fetch(`${apiUrl}/korlu?korcam=${korcamId}`)
                 .then(response => response.json())

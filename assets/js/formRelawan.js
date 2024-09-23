@@ -249,8 +249,6 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
         // Proceed with form submission via AJAX or any other logic
         function simpanDataPemilih(pemilih) {
           const dataPemilih = typeof pemilih === 'string' ? JSON.parse(pemilih) : pemilih;
-
-          console.log(dataPemilih)
           
           const pemilihPemula = JSON.stringify(dataPemilih)
 
