@@ -70,8 +70,13 @@ async function validasiNik(nik) {
   try {
     const response = await fetch(`${apiUrl}/validasi?nik=${nik}`);
     const data = await response.json();
-   return data.data;
+    if (data.success) {
+        return data.data;
+    } 
+    resetResult()
+    showError(data.error)
   } catch (error) {
+    console.log("error: ", error)
     return false; 
   }
 }
@@ -155,7 +160,7 @@ function simpanDataRelawan(korTps) {
 document.getElementById('formNik').addEventListener('submit', async function(event) {
   event.preventDefault();
   const cariBtn = document.getElementById('cariBtn');
-  cariBtn.disabled = true
+  //cariBtn.disabled = true
 
   const nik = document.getElementById('nik').value;
   const data = await validasiNik(nik)
