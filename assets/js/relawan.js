@@ -1,4 +1,4 @@
-const apiUrl = 'http://localhost:3010'
+const apiUrl = 'http://127.0.01:3010'
 document.addEventListener('DOMContentLoaded', function() {
     const provinsiSelect = document.getElementById('provinsi');
     const kabupatenSelect = document.getElementById('kabupaten');
