@@ -204,11 +204,6 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
         </div>
 
         <div>
-          <label for="tps" class="block text-sm font-medium text-gray-700">TPS</label>
-          <input type="text" id="tps" name="tps" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
-        </div>
-
-        <div>
           <label for="foto-ktp" class="block text-sm font-medium text-gray-700">Foto KTP</label>
           <input type="file" id="foto-ktp" name="foto-ktp" accept="image/*" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
         </div>
@@ -249,7 +244,7 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
         // Proceed with form submission via AJAX or any other logic
         function simpanDataPemilih(pemilih) {
           const dataPemilih = typeof pemilih === 'string' ? JSON.parse(pemilih) : pemilih;
-          
+
           const pemilihPemula = JSON.stringify(dataPemilih)
 
           fetch(`${apiUrl}/pemilih`, {
