@@ -1,4 +1,4 @@
-const apiUrl = 'http://127.0.01:3010'
+const apiUrl = 'https://formlv3.inimibarru.com/api'
 document.addEventListener('DOMContentLoaded', function() {
     const provinsiSelect = document.getElementById('provinsi');
     const kabupatenSelect = document.getElementById('kabupaten');
