@@ -1,4 +1,3 @@
-let dataRelawan = {}
 function checkFormCompletion() {
     const provinsi = document.getElementById('provinsi').value;
     const kabupaten = document.getElementById('kabupaten').value;
@@ -6,11 +5,10 @@ function checkFormCompletion() {
     const kelurahan = document.getElementById('kelurahan').value;
     const korcam = document.getElementById('korcam').value;
     const korlu = document.getElementById('korlu').value;
-    const tps = document.getElementById('tps').value;
-  
+    //const tps = document.getElementById('tps').value;
     // Check if all select elements have a value
     const allFilled = provinsi && kabupaten && kecamatan && kelurahan && korcam && korlu;
-    dataRelawan.fkTpsKtp = parseInt(tps)
+    //dataRelawan.fkTpsKtp = parseInt(tps)
   
     // Enable or disable the button based on the form completion
     document.getElementById('nextButton').disabled = !allFilled;
@@ -67,18 +65,12 @@ function resetResult() {
 
 async function validasiNik(nik) {
   resetResult()
-  try {
-    const response = await fetch(`${apiUrl}/validasi?nik=${nik}`);
-    const data = await response.json();
+  const data = await apiRequest.apiGet('/validasi', { nik });
     if (data.success) {
         return data.data;
-    } 
+    }
     resetResult()
     showError(data.error)
-  } catch (error) {
-    console.log("error: ", error)
-    return false; 
-  }
 }
 
 function showError(errorMessage) {
@@ -88,18 +80,28 @@ function showError(errorMessage) {
     </div>`
 }
 
-function populateKorTps(id, nama, tps) {
+function populateTps(selectElement, data, placeholder = "Pilih") {
+    selectElement.innerHTML = `<option value="">${placeholder}</option>`;
+    data.forEach(item => {
+        selectElement.innerHTML += `<option value="${item.id}">${item.namaTps}</option>`;
+    });
+}
 
-  let formData = {}
-  formData.fkPemilih = parseInt(id)
-  formData.nama = nama
-  formData.fkTps = parseInt(tps)
-  formData.fkRelawanLvl2 = parseInt(document.getElementById('korlu').value)
-  formData.verifikasi = 1
-  formData.username = ""
-  formData.password = "" 
+function populateKorTps(id, nama, tps, alamat, namaTps) {
+  
+  formDataRelawan.fkPemilih = parseInt(id)
+  formDataRelawan.nama = nama
+  //formData.fkTps = parseInt(tps)
+  formDataRelawan.fkRelawanLvl2 = parseInt(document.getElementById('korlu').value)
+  formDataRelawan.verifikasi = 0
+  formDataRelawan.status =1
+  
+  formDataRelawan.alamat = alamat
+  formDataRelawan.namaTps = namaTps
+  formDataRelawan.kelurahan = document.getElementById('kelurahan').value
 
-  const korTps = JSON.stringify(formData)
+  const korTps = JSON.stringify(formDataRelawan)
+
   
   document.getElementById('pemilih').innerHTML = ``
 
@@ -107,21 +109,70 @@ function populateKorTps(id, nama, tps) {
   <div class="flex flex-col gap-4 m-4 p-4 bg-orange-50">
     <div class="font-semibold">Konfirmasi Data:</div>
     <ul class="list-disc pl-5">
-      <li>ID: ${formData.fkPemilih}</li>
-      <li>Nama Relawan Level 3: ${formData.nama}</li>
-      <li>ID Relawan Level 2 (Korlu): ${formData.fkRelawanLvl2}</li>
-      <li>Kode TPS: ${formData.fkTps}</li>
+      <li>Nama : ${formDataRelawan.nama}</li>
+      <li>Alamat : ${formDataRelawan.alamat}</li>
+      <li>Nama TPS: ${formDataRelawan.namaTps}</li>
     </ul>
-    <button type="button" id="kirimBtn" data-form='${JSON.stringify(formData)}' class="mt-4 text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orage-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800">
+    <div class=col-span-2>
+        <label for="noHp" class="block text-sm font-medium text-gray-700">No WA / HP</label>
+        <input type="text" id="noHp" name="noHp" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+    </div>
+    <div class="col-span-2">
+        <label for="tpsPenugasan" class="block text-sm font-medium text-gray-700">TPS Penugasan</label>
+        <select id="tpsPenugasan" name="tpsPenugasan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+         <option value="">Pilih Tps</option>
+        </select>
+    </div>
+    <div class=col-span-2>
+        <label for="user" class="block text-sm font-medium text-gray-700">User</label>
+        <input type="text" id="user" name="user" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+    </div>
+    <div class=col-span-2>
+        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" id="password" name="password" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+    </div>
+    <button type="button" id="kirimBtn" onclick="simpanRelawan()" class="mt-4 text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orage-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800">
       Kirim
     </button>
   </div>
 `;
 
-document.getElementById('kirimBtn').addEventListener('click', function() {
+const tpsPenugasanSelect = document.getElementById('tpsPenugasan');
+fetch(`${apiUrl}/tps?kelurahan=${formDataRelawan.kelurahan}`)
+        .then(response => response.json())
+        .then(data => {
+            populateTps(tpsPenugasanSelect, data.data, "Pilih Tps Penugasan");
+            tpsPenugasanSelect.disabled = false; // Enable the select
+        });
+
+
+
+/* document.getElementById('kirimBtn').addEventListener('click', function() {
     const formData = JSON.parse(this.getAttribute('data-form'));
-    simpanDataRelawan(formData);
-  });
+    console.log("formData", formData)
+    //simpanDataRelawan(formData);
+  });*/
+
+}
+
+async function simpanRelawan() {
+    const fkTps = document.getElementById('tpsPenugasan').value
+    formDataRelawan.user = document.getElementById('user').value
+    formDataRelawan.password = document.getElementById('password').value
+    formDataRelawan.fkTps = parseInt(fkTps)
+    formDataRelawan.noHp = document.getElementById('noHp').value
+
+    const dataRelawanLv3 = JSON.stringify(formDataRelawan)
+
+    const response = await apiRequest.apiPost('/relawan-lv3', formDataRelawan);
+    
+    resetResult()
+
+    if (response.success) {
+        showNextStep(2)
+    }
+
+    showError(response.error)
 
 }
 
@@ -159,149 +210,180 @@ function simpanDataRelawan(korTps) {
 
 document.getElementById('formNik').addEventListener('submit', async function(event) {
   event.preventDefault();
-  const cariBtn = document.getElementById('cariBtn');
-  //cariBtn.disabled = true
-
   const nik = document.getElementById('nik').value;
-  const data = await validasiNik(nik)
-  const pemilih = data.pemilih
 
-  dataRelawan.noKtp = nik
-  
-  if (!data.status_nik) {
-    document.getElementById('formData').classList.remove('hidden');
-    document.getElementById('formData').innerHTML = `
-      <form id="formDataDiri" class="max-w-xl mx-auto grid grid-cols-1 gap-4 sm:grid-cols-2">
+  try {
+
+    const data = await validasiNik(nik)  
+    const pemilih = data.pemilih;
+
+    dataRelawan.noKtp = nik
+
     
-    <div>
-      <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
-      <input type="text" id="nama" name="nama" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
-    </div>
-
-    <div>
-      <label for="tempat-lahir" class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
-      <input type="text" id="tempat-lahir" name="tempat-lahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
-    </div>
-
-    <div>
-      <label for="tgl-lahir" class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
-      <input type="date" id="tgl-lahir" name="tgl-lahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
-    </div>
-
-    <div>
-      <label for="jenis-kelamin" class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
-      <select id="jenis-kelamin" name="jenis-kelamin" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required>
-        <option value="">Pilih Jenis Kelamin</option>
-        <option value="L">Laki-laki</option>
-        <option value="P">Perempuan</option>
-      </select>
-    </div>
-
-    <div>
-      <label for="no-hp" class="block text-sm font-medium text-gray-700">No HP/WA</label>
-      <input type="tel" id="no-hp" name="no-hp" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
-    </div>
-
-    <div class="sm:col-span-2">
-      <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
-      <input type="text" id="alamat" name="alamat" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
-    </div>
-
-    <div>
-      <label for="foto-ktp" class="block text-sm font-medium text-gray-700">Foto KTP</label>
-      <input type="file" id="foto-ktp" name="foto-ktp" accept="image/*" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
-    </div>
-
-    <div class="sm:col-span-2 flex justify-between mt-4">
-      <!-- Back Button -->
-      <button type="button" onclick="showPreviousStep(2)" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-        Kembali
-      </button>
-
-      <!-- Submit Button -->
-      <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-        Kirim
-      </button>
-    </div>
-
-  </form>
-    `;
-
-    // Attach the event listener to the dynamically generated form
-    document.getElementById('formDataDiri').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const pemilih = new FormData(this);
-
-        dataRelawan.nama = pemilih.get('nama')
-        dataRelawan.tempatLahir = pemilih.get('tempat-lahir')
-        dataRelawan.tglLahir = pemilih.get('tgl-lahir')
-        dataRelawan.jenisKelamin = pemilih.get('jenis-kelamin')
-        dataRelawan.noHp = pemilih.get('no-hp')
-        dataRelawan.alamatDomisili = pemilih.get('alamat')
-        //dataRelawan.fkTPsKtp = pemilih.get('tps')
-        //dataRelawan.fileKtp = pemilih.get('foto-ktp')
-
+    if (!data.status_nik) {
+        document.getElementById('formData').classList.remove('hidden');
+        document.getElementById('formData').innerHTML = `
+        <form id="formDataDiri" class="max-w-xl mx-auto grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
+          <input type="text" id="nama" name="nama" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+        </div>
+    
+        <div>
+          <label for="tempat-lahir" class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
+          <input type="text" id="tempat-lahir" name="tempat-lahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+        </div>
+    
+        <div>
+          <label for="tgl-lahir" class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
+          <input type="date" id="tgl-lahir" name="tgl-lahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+        </div>
+    
+        <div>
+          <label for="jenis-kelamin" class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
+          <select id="jenis-kelamin" name="jenis-kelamin" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required>
+            <option value="">Pilih Jenis Kelamin</option>
+            <option value="L">Laki-laki</option>
+            <option value="P">Perempuan</option>
+          </select>
+        </div>
+    
+        <div>
+          <label for="no-hp" class="block text-sm font-medium text-gray-700">No HP/WA</label>
+          <input type="tel" id="no-hp" name="no-hp" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+        </div>
+    
+        <div class="sm:col-span-2">
+          <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
+          <input type="text" id="alamat" name="alamat" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+        </div>
+    
+        <div>
+          <label for="foto-ktp" class="block text-sm font-medium text-gray-700">Foto KTP</label>
+          <input type="file" id="foto-ktp" name="foto-ktp" accept="image/*" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+        </div>
+    
+        <div class="sm:col-span-2 flex justify-between mt-4">
+          <!-- Back Button -->
+          <button type="button" onclick="showPreviousStep(2)" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+            Kembali
+          </button>
+    
+          <!-- Submit Button -->
+          <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            Kirim
+          </button>
+        </div>
+    
+      </form>
+        `;
+    
+        // Attach the event listener to the dynamically generated form
+        document.getElementById('formDataDiri').addEventListener('submit', function(event) {
+            event.preventDefault();
+    
+            const pemilih = new FormData(this);
+    
+            dataRelawan.nama = pemilih.get('nama')
+            dataRelawan.tempatLahir = pemilih.get('tempat-lahir')
+            dataRelawan.tglLahir = pemilih.get('tgl-lahir')
+            dataRelawan.jenisKelamin = pemilih.get('jenis-kelamin')
+            dataRelawan.noHp = pemilih.get('no-hp')
+            dataRelawan.alamatDomisili = pemilih.get('alamat')
+            //dataRelawan.fkTPsKtp = pemilih.get('tps')
+            //dataRelawan.fileKtp = pemilih.get('foto-ktp')
+    
+            
+            //simpanDataPemilih(dataRelawan)
+    
+            // Proceed with form submission via AJAX or any other logic
+            function simpanDataPemilih(pemilih) {
+              const dataPemilih = typeof pemilih === 'string' ? JSON.parse(pemilih) : pemilih;
+    
+              const pemilihPemula = JSON.stringify(dataPemilih)
+    
+              fetch(`${apiUrl}/pemilih`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: pemilihPemula,
+              })
+                .then(response => response.json())
+                .then(result => {
+                  if (result.success) { 
+                    resetResult();
+                    validasiNik(dataPemilih.noKtp)
+                  } else {
+                    resetResult();
+                    showError(result.error)
+                    showPreviousStep(1)
+                  }
+                })
+                .catch(error => {
+                  resetResult();
+                  showError(error)
+                  showPreviousStep(1)
+            });
+              
+    
+            }
+    
+          });
+    
+      } else {
+        const id = pemilih[0].id
+        const nama = pemilih[0].nama
+        const tps = pemilih[0].tps
+        const namaTps = pemilih[0].namaTps
         
-        simpanDataPemilih(dataRelawan)
-
-        // Proceed with form submission via AJAX or any other logic
-        function simpanDataPemilih(pemilih) {
-          const dataPemilih = typeof pemilih === 'string' ? JSON.parse(pemilih) : pemilih;
-
-          const pemilihPemula = JSON.stringify(dataPemilih)
-
-          fetch(`${apiUrl}/pemilih`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: pemilihPemula,
-          })
-            .then(response => response.json())
-            .then(result => {
-              if (result.success) { 
-                resetResult();
-                validasiNik(dataPemilih.noKtp)
-              } else {
-                resetResult();
-                showError(result.error)
-                showPreviousStep(1)
-              }
-            })
-            .catch(error => {
-              resetResult();
-              showError(error)
-              showPreviousStep(1)
-        });
-          
-
-        }
-
-      });
-
-  } else {
-    const id = pemilih[0].id
-    const nama = pemilih[0].nama
-    const tps = pemilih[0].tps
-    const namaTps = pemilih[0].namaTps
-    
-    document.getElementById('pemilih').innerHTML = `
-    <div class="flex flex-col gap-4 m-4 p-4 bg-orange-50">
-      <div class="flex justify-items-start font-semibold">ID: ${pemilih[0].id} - Nama: ${pemilih[0].nama} - TPS: ${pemilih[0].namaTps}</div>
-      <button type="button" id="pilihPemilihBtn" onclick="populateKorTps('${pemilih[0].id}', '${pemilih[0].nama}', '${pemilih[0].tps}', '${pemilih[0].namaTps}')" class="flex justify-items-center text-white bg-orange-600 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800">
+        document.getElementById('pemilih').innerHTML = `
+<div class="relative overflow-x-auto">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Nama
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Alamat
+                </th>
+                <th scope="col" class="px-2 py-2">
+                    TPS
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-small text-gray-900 whitespace-nowrap dark:text-white">
+                    ${pemilih[0].nama}
+                </th>
+                <td class="px-6 py-4">
+                    ${pemilih[0].alamatKtp}
+                </td>
+                <td class="px-2 py-2">
+                    ${pemilih[0].namaTps}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="mt-2 flex justify-center items-center">
+     <button type="button" id="pilihPemilihBtn" onclick="populateKorTps('${pemilih[0].id}', '${pemilih[0].nama}', '${pemilih[0].tps}', '${pemilih[0].alamatKtp}', '${pemilih[0].namaTps}')" class="flex justify-items-center text-white bg-orange-600 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
         Pilih
         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
         </svg>
-      </button>
+    </button>
     </div>
-    
+</div>    
     `;
+}
+
+
+  } catch (error) {
+    console.log("Nik salah !")
   }
-
-  cariBtn.disabled = false
-
+  
 
 });
 
