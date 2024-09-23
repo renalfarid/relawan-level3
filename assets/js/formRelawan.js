@@ -1,3 +1,4 @@
+let dataRelawan = {}
 function checkFormCompletion() {
     const provinsi = document.getElementById('provinsi').value;
     const kabupaten = document.getElementById('kabupaten').value;
@@ -5,9 +6,11 @@ function checkFormCompletion() {
     const kelurahan = document.getElementById('kelurahan').value;
     const korcam = document.getElementById('korcam').value;
     const korlu = document.getElementById('korlu').value;
+    const tps = document.getElementById('tps').value;
   
     // Check if all select elements have a value
     const allFilled = provinsi && kabupaten && kecamatan && kelurahan && korcam && korlu;
+    dataRelawan.fkTpsKtp = parseInt(tps)
   
     // Enable or disable the button based on the form completion
     document.getElementById('nextButton').disabled = !allFilled;
@@ -143,9 +146,9 @@ function simpanDataRelawan(korTps) {
           resetResult();
           showError(error)
           showPreviousStep(1)
-        });
+    });
 
-  }
+}
 
 
 document.getElementById('formNik').addEventListener('submit', async function(event) {
@@ -156,11 +159,16 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
   const nik = document.getElementById('nik').value;
   const data = await validasiNik(nik)
   const pemilih = data.pemilih
+
+  dataRelawan.noKtp = nik
   
   if (!data.status_nik) {
     document.getElementById('formData').innerHTML = `
       <form id="formDataDiri" class="max-w-2xl mx-auto grid grid-cols-1 gap-4 sm:grid-cols-2">
-
+        <div>
+        <label for="nik" class="block text-sm font-medium text-gray-700">NIK</label>
+          <input type="text" id="nik" name="nik" value=${nik} class="w-full bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" disabled>
+        </div>
         <div>
           <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
           <input type="text" id="nama" name="nama" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
@@ -180,8 +188,8 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
           <label for="jenis-kelamin" class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
           <select id="jenis-kelamin" name="jenis-kelamin" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required>
             <option value="">Pilih Jenis Kelamin</option>
-            <option value="Laki-laki">Laki-laki</option>
-            <option value="Perempuan">Perempuan</option>
+            <option value="L">Laki-laki</option>
+            <option value="P">Perempuan</option>
           </select>
         </div>
 
@@ -219,6 +227,62 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
 
       </form>
     `;
+
+    // Attach the event listener to the dynamically generated form
+    document.getElementById('formDataDiri').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const pemilih = new FormData(this);
+
+        dataRelawan.nama = pemilih.get('nama')
+        dataRelawan.tempatLahir = pemilih.get('tempat-lahir')
+        dataRelawan.tglLahir = pemilih.get('tgl-lahir')
+        dataRelawan.jenisKelamin = pemilih.get('jenis-kelamin')
+        dataRelawan.noHp = pemilih.get('no-hp')
+        dataRelawan.alamatDomisili = pemilih.get('alamat')
+        //dataRelawan.fkTPsKtp = pemilih.get('tps')
+        //dataRelawan.fileKtp = pemilih.get('foto-ktp')
+
+        
+        simpanDataPemilih(dataRelawan)
+
+        // Proceed with form submission via AJAX or any other logic
+        function simpanDataPemilih(pemilih) {
+          const dataPemilih = typeof pemilih === 'string' ? JSON.parse(pemilih) : pemilih;
+
+          console.log(dataPemilih)
+          
+          const pemilihPemula = JSON.stringify(dataPemilih)
+
+          fetch(`${apiUrl}/pemilih`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: pemilihPemula,
+          })
+            .then(response => response.json())
+            .then(result => {
+              if (result.success) { 
+                resetResult();
+                validasiNik(dataPemilih.noKtp)
+              } else {
+                resetResult();
+                showError(result.error)
+                showPreviousStep(1)
+              }
+            })
+            .catch(error => {
+              resetResult();
+              showError(error)
+              showPreviousStep(1)
+        });
+          
+
+        }
+
+      });
+
   } else {
     const id = pemilih[0].id
     const nama = pemilih[0].nama

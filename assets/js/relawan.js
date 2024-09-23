@@ -1,9 +1,10 @@
-const apiUrl = 'https://formlv3.inimibarru.com/api'
+const apiUrl = 'http://127.0.01:3010'
 document.addEventListener('DOMContentLoaded', function() {
     const provinsiSelect = document.getElementById('provinsi');
     const kabupatenSelect = document.getElementById('kabupaten');
     const kecamatanSelect = document.getElementById('kecamatan');
     const kelurahanSelect = document.getElementById('kelurahan');
+    const tpsSelect = document.getElementById('tps');
     const korcamSelect = document.getElementById('korcam');
     const korluSelect = document.getElementById('korlu');
 
@@ -32,6 +33,13 @@ document.addEventListener('DOMContentLoaded', function() {
         selectElement.innerHTML = `<option value="">${placeholder}</option>`;
         data.forEach(item => {
             selectElement.innerHTML += `<option value="${item.id}">${item.namaKelurahan}</option>`;
+        });
+    }
+
+    function populateTps(selectElement, data, placeholder = "Pilih") {
+        selectElement.innerHTML = `<option value="">${placeholder}</option>`;
+        data.forEach(item => {
+            selectElement.innerHTML += `<option value="${item.id}">${item.namaTps}</option>`;
         });
     }
 
@@ -125,6 +133,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         } else {
             kelurahanSelect.disabled = true;
+        }
+    });
+
+    kelurahanSelect.addEventListener('change', function() {
+        const kelurahanId = this.value;
+        if (kelurahanId) {
+            fetch(`${apiUrl}/tps?kelurahan=${kelurahanId}`)
+                .then(response => response.json())
+                .then(data => {
+                    populateTps(tpsSelect, data.data, "Pilih TPS");
+                    tpsSelect.disabled = false;
+                });
+        } else {
+            tpsSelect.disabled = true;
         }
     });
 
