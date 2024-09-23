@@ -6,8 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const korcamSelect = document.getElementById('korcam');
     const korluSelect = document.getElementById('korlu');
 
-    dataRelawan.kelurahan = kelurahanSelect;
-
     function populateProvinsi(selectElement, data, placeholder = "Pilih") {
         selectElement.innerHTML = `<option value="">${placeholder}</option>`;
         data.forEach(item => {

@@ -63,6 +63,11 @@ function resetResult() {
     document.getElementById('errorData').innerHTML = ``
 }
 
+function clearError() {
+  document.getElementById('errorData').innerHTML = ``
+  document.getElementById('errorAtas').innerHTML = ``
+}
+
 async function validasiNik(nik) {
   resetResult()
   const data = await apiRequest.apiGet('/validasi', { nik });
@@ -78,6 +83,13 @@ function showError(errorMessage) {
     <div class="m-4 p-4 bg-red-50">
     <span>${errorMessage}</span>
     </div>`
+}
+
+function showErrorAtas(errorMessage) {
+  document.getElementById('errorAtas').innerHTML = `
+  <div class="m-4 p-4 bg-red-50">
+  <span>${errorMessage}</span>
+  </div>`
 }
 
 function populateTps(selectElement, data, placeholder = "Pilih") {
@@ -99,7 +111,7 @@ function populateKorTps(id, nama, tps, alamat, namaTps) {
   formDataRelawan.alamat = alamat
   formDataRelawan.namaTps = namaTps
   formDataRelawan.kelurahan = document.getElementById('kelurahan').value
-
+  
   const korTps = JSON.stringify(formDataRelawan)
 
   
@@ -111,7 +123,6 @@ function populateKorTps(id, nama, tps, alamat, namaTps) {
     <ul class="list-disc pl-5">
       <li>Nama : ${formDataRelawan.nama}</li>
       <li>Alamat : ${formDataRelawan.alamat}</li>
-      <li>Nama TPS: ${formDataRelawan.namaTps}</li>
     </ul>
     <div class=col-span-2>
         <label for="noHp" class="block text-sm font-medium text-gray-700">No WA / HP</label>
@@ -145,15 +156,29 @@ fetch(`${apiUrl}/tps?kelurahan=${formDataRelawan.kelurahan}`)
             tpsPenugasanSelect.disabled = false; // Enable the select
         });
 
-
-
-/* document.getElementById('kirimBtn').addEventListener('click', function() {
-    const formData = JSON.parse(this.getAttribute('data-form'));
-    console.log("formData", formData)
-    //simpanDataRelawan(formData);
-  });*/
-
 }
+
+function validateFormRelawan(formDataRelawan) {
+  // Loop through each key in formDataRelawan
+  for (const key in formDataRelawan) {
+      if (formDataRelawan.hasOwnProperty(key)) {
+          const value = formDataRelawan[key];
+
+          // Check if value is empty string or NaN
+          if (value === "" || Number.isNaN(value)) {
+             showErrorAtas(`Mohon isi: ${key}`)
+              console.log(`Validation failed: ${key} is invalid`);
+              return false;
+          }
+      }
+  }
+
+  // If all values are valid
+  clearError()
+  console.log('Validation passed:', formDataRelawan);
+  return true;
+}
+
 
 async function simpanRelawan() {
     const fkTps = document.getElementById('tpsPenugasan').value
@@ -162,17 +187,19 @@ async function simpanRelawan() {
     formDataRelawan.fkTps = parseInt(fkTps)
     formDataRelawan.noHp = document.getElementById('noHp').value
 
-    const dataRelawanLv3 = JSON.stringify(formDataRelawan)
+    //const dataRelawanLv3 = JSON.stringify(formDataRelawan)
+    const cekForm = validateFormRelawan(formDataRelawan)
+    if (cekForm) {
+      const response = await apiRequest.apiPost('/relawan-lv3', formDataRelawan);
+      resetResult()
 
-    const response = await apiRequest.apiPost('/relawan-lv3', formDataRelawan);
-    
-    resetResult()
-
-    if (response.success) {
-        showNextStep(2)
+      if (response.success) {
+         showNextStep(2)
+      } else {
+        showError(response.error)
+      }
+      
     }
-
-    showError(response.error)
 
 }
 
@@ -292,41 +319,28 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
             dataRelawan.alamatDomisili = pemilih.get('alamat')
             //dataRelawan.fkTPsKtp = pemilih.get('tps')
             //dataRelawan.fileKtp = pemilih.get('foto-ktp')
+
+            console.log("data relawan", dataRelawan)
     
-            
-            //simpanDataPemilih(dataRelawan)
+            simpanDataPemilih(dataRelawan)
     
             // Proceed with form submission via AJAX or any other logic
-            function simpanDataPemilih(pemilih) {
+            async function simpanDataPemilih(pemilih) {
               const dataPemilih = typeof pemilih === 'string' ? JSON.parse(pemilih) : pemilih;
     
               const pemilihPemula = JSON.stringify(dataPemilih)
+              const response = await apiRequest.apiPost('/pemilih', dataPemilih);
     
-              fetch(`${apiUrl}/pemilih`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: pemilihPemula,
-              })
-                .then(response => response.json())
-                .then(result => {
-                  if (result.success) { 
-                    resetResult();
-                    validasiNik(dataPemilih.noKtp)
-                  } else {
-                    resetResult();
-                    showError(result.error)
-                    showPreviousStep(1)
-                  }
-                })
-                .catch(error => {
-                  resetResult();
-                  showError(error)
-                  showPreviousStep(1)
-            });
+              resetResult()
+
+              if (response.success) {
+                validasiNik(dataPemilih.noKtp)
+              } else {
+                showError(response.error)
+              }
+
+              showPreviousStep(1)
               
-    
             }
     
           });
@@ -348,9 +362,6 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
                 <th scope="col" class="px-6 py-3">
                     Alamat
                 </th>
-                <th scope="col" class="px-2 py-2">
-                    TPS
-                </th>
             </tr>
         </thead>
         <tbody>
@@ -360,9 +371,6 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
                 </th>
                 <td class="px-6 py-4">
                     ${pemilih[0].alamatKtp}
-                </td>
-                <td class="px-2 py-2">
-                    ${pemilih[0].namaTps}
                 </td>
             </tr>
         </tbody>
