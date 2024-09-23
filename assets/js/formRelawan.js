@@ -164,63 +164,60 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
   
   if (!data.status_nik) {
     document.getElementById('formData').innerHTML = `
-      <form id="formDataDiri" class="max-w-2xl mx-auto grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div>
-        <label for="nik" class="block text-sm font-medium text-gray-700">NIK</label>
-          <input type="text" id="nik" name="nik" value=${nik} class="w-full bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" disabled>
-        </div>
-        <div>
-          <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
-          <input type="text" id="nama" name="nama" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
-        </div>
+      <form id="formDataDiri" class="max-w-xl mx-auto grid grid-cols-1 gap-4 sm:grid-cols-2">
+    
+    <div>
+      <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
+      <input type="text" id="nama" name="nama" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+    </div>
 
-        <div>
-          <label for="tempat-lahir" class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
-          <input type="text" id="tempat-lahir" name="tempat-lahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
-        </div>
+    <div>
+      <label for="tempat-lahir" class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
+      <input type="text" id="tempat-lahir" name="tempat-lahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+    </div>
 
-        <div>
-          <label for="tgl-lahir" class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
-          <input type="date" id="tgl-lahir" name="tgl-lahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
-        </div>
+    <div>
+      <label for="tgl-lahir" class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
+      <input type="date" id="tgl-lahir" name="tgl-lahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+    </div>
 
-        <div>
-          <label for="jenis-kelamin" class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
-          <select id="jenis-kelamin" name="jenis-kelamin" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required>
-            <option value="">Pilih Jenis Kelamin</option>
-            <option value="L">Laki-laki</option>
-            <option value="P">Perempuan</option>
-          </select>
-        </div>
+    <div>
+      <label for="jenis-kelamin" class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
+      <select id="jenis-kelamin" name="jenis-kelamin" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required>
+        <option value="">Pilih Jenis Kelamin</option>
+        <option value="L">Laki-laki</option>
+        <option value="P">Perempuan</option>
+      </select>
+    </div>
 
-        <div>
-          <label for="no-hp" class="block text-sm font-medium text-gray-700">No HP/WA</label>
-          <input type="tel" id="no-hp" name="no-hp" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
-        </div>
+    <div>
+      <label for="no-hp" class="block text-sm font-medium text-gray-700">No HP/WA</label>
+      <input type="tel" id="no-hp" name="no-hp" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+    </div>
 
-        <div class="sm:col-span-2">
-          <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
-          <input type="text" id="alamat" name="alamat" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
-        </div>
+    <div class="sm:col-span-2">
+      <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
+      <input type="text" id="alamat" name="alamat" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+    </div>
 
-        <div>
-          <label for="foto-ktp" class="block text-sm font-medium text-gray-700">Foto KTP</label>
-          <input type="file" id="foto-ktp" name="foto-ktp" accept="image/*" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
-        </div>
+    <div>
+      <label for="foto-ktp" class="block text-sm font-medium text-gray-700">Foto KTP</label>
+      <input type="file" id="foto-ktp" name="foto-ktp" accept="image/*" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+    </div>
 
-        <div class="sm:col-span-2 flex justify-between">
-          <!-- Back Button -->
-          <button type="button" onclick="showPreviousStep()" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-            Kembali
-          </button>
+    <div class="sm:col-span-2 flex justify-between mt-4">
+      <!-- Back Button -->
+      <button type="button" onclick="showPreviousStep()" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+        Kembali
+      </button>
 
-          <!-- Submit Button -->
-          <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-            Kirim
-          </button>
-        </div>
+      <!-- Submit Button -->
+      <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+        Kirim
+      </button>
+    </div>
 
-      </form>
+  </form>
     `;
 
     // Attach the event listener to the dynamically generated form
