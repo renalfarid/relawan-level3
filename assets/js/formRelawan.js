@@ -61,6 +61,8 @@ function resetResult() {
     document.getElementById('pemilih').innerHTML = ``
     document.getElementById('konfirmasiData').innerHTML = ``
     document.getElementById('errorData').innerHTML = ``
+    document.getElementById('errorAtas').innerHTML = ``
+    document.getElementById('successData').innerHTML = ``
 }
 
 function clearError() {
@@ -83,6 +85,13 @@ function showError(errorMessage) {
     <div class="m-4 p-4 bg-red-50">
     <span>${errorMessage}</span>
     </div>`
+}
+
+function showSuccess(successMessage) {
+  document.getElementById('successData').innerHTML = `
+  <div class="m-4 p-4 bg-green-50">
+  <span>${successMessage}</span>
+  </div>`
 }
 
 function showErrorAtas(errorMessage) {
@@ -252,23 +261,27 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
         document.getElementById('formData').innerHTML = `
         <form id="formDataDiri" class="max-w-xl mx-auto grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
+          <label for="noKtp" class="block text-sm font-medium text-gray-700">NIK</label>
+          <input type="text" id="noKtp" name="noKtp" value="${nik}" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"/>
+        </div>
+        <div>
           <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
           <input type="text" id="nama" name="nama" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
         </div>
     
         <div>
-          <label for="tempat-lahir" class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
-          <input type="text" id="tempat-lahir" name="tempat-lahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+          <label for="tempatLahir" class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
+          <input type="text" id="tempatLahir" name="tempatLahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
         </div>
     
         <div>
-          <label for="tgl-lahir" class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
-          <input type="date" id="tgl-lahir" name="tgl-lahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+          <label for="tglLahir" class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
+          <input type="date" id="tglLahir" name="tglLahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
         </div>
     
         <div>
-          <label for="jenis-kelamin" class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
-          <select id="jenis-kelamin" name="jenis-kelamin" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required>
+          <label for="jenisKelamin" class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
+          <select id="jenisKelamin" name="jenisKelamin" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required>
             <option value="">Pilih Jenis Kelamin</option>
             <option value="L">Laki-laki</option>
             <option value="P">Perempuan</option>
@@ -276,18 +289,18 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
         </div>
     
         <div>
-          <label for="no-hp" class="block text-sm font-medium text-gray-700">No HP/WA</label>
-          <input type="tel" id="no-hp" name="no-hp" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+          <label for="noHp" class="block text-sm font-medium text-gray-700">No HP/WA</label>
+          <input type="tel" id="noHp" name="noHp" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
         </div>
     
         <div class="sm:col-span-2">
-          <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
-          <input type="text" id="alamat" name="alamat" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+          <label for="alamatKtp" class="block text-sm font-medium text-gray-700">Alamat</label>
+          <input type="text" id="alamatKtp" name="alamatKtp" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
         </div>
     
         <div>
-          <label for="foto-ktp" class="block text-sm font-medium text-gray-700">Foto KTP</label>
-          <input type="file" id="foto-ktp" name="foto-ktp" accept="image/*" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+          <label for="fileKtp" class="block text-sm font-medium text-gray-700">Foto KTP</label>
+          <input type="file" id="fileKtp" name="fileKtp" accept="image/*" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
         </div>
     
         <div class="sm:col-span-2 flex justify-between mt-4">
@@ -311,25 +324,48 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
     
             const pemilih = new FormData(this);
     
-            dataRelawan.nama = pemilih.get('nama')
+            /*dataRelawan.nama = pemilih.get('nama')
             dataRelawan.tempatLahir = pemilih.get('tempat-lahir')
             dataRelawan.tglLahir = pemilih.get('tgl-lahir')
             dataRelawan.jenisKelamin = pemilih.get('jenis-kelamin')
             dataRelawan.noHp = pemilih.get('no-hp')
             dataRelawan.alamatDomisili = pemilih.get('alamat')
-            //dataRelawan.fkTPsKtp = pemilih.get('tps')
-            //dataRelawan.fileKtp = pemilih.get('foto-ktp')
+            dataRelawan.fileKtp = pemilih.get('foto-ktp')*/
 
-            console.log("data relawan", dataRelawan)
+            console.log("data relawan", pemilih)
     
-            simpanDataPemilih(dataRelawan)
+            simpanDataPemilih(pemilih)
+
     
             // Proceed with form submission via AJAX or any other logic
             async function simpanDataPemilih(pemilih) {
-              const dataPemilih = typeof pemilih === 'string' ? JSON.parse(pemilih) : pemilih;
+              //const dataPemilih = typeof pemilih === 'string' ? JSON.parse(pemilih) : pemilih;
+
+              try {
+                const response = await fetch(`${apiUrl}/pemilih`, {
+                    method: 'POST',
+                    body: pemilih, // Menggunakan FormData yang sudah mencakup semua data termasuk file
+                });
+        
+                const result = await response.json();
+        
+                console.log("response: ", result)
+                if (result.success) {
+                    resetResult()
+                    showSuccess(result.data + ',' + ' Silahkan melakukan pencarian NIK kembali untuk melanjutkan pengisian data relawan !')
+                    console.log('Sukses menambah pemilih:', result);
+                    //validasiNik(dataPemilih.noKtp)
+                } else {
+                    resetResult()
+                    console.error('Gagal menambah pemilih:', result.error);
+                    showError(result.error)
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat mengirim data');
+            }
     
-              const pemilihPemula = JSON.stringify(dataPemilih)
-              const response = await apiRequest.apiPost('/pemilih', dataPemilih);
+              /* const response = await apiRequest.apiPost('/pemilih', dataPemilih);
     
               resetResult()
 
@@ -339,7 +375,7 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
                 showError(response.error)
               }
 
-              showPreviousStep(1)
+              showPreviousStep(1)*/
               
             }
     
