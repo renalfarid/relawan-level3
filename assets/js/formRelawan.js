@@ -174,7 +174,6 @@ function validateFormRelawan(formDataRelawan) {
           // Check if value is empty string or NaN
           if (value === "" || Number.isNaN(value)) {
              showErrorAtas(`Mohon isi: ${key}`)
-              console.log(`Validation failed: ${key} is invalid`);
               return false;
           }
       }
@@ -182,7 +181,6 @@ function validateFormRelawan(formDataRelawan) {
 
   // If all values are valid
   clearError()
-  console.log('Validation passed:', formDataRelawan);
   return true;
 }
 
@@ -193,9 +191,6 @@ async function simpanRelawan() {
     formDataRelawan.password = document.getElementById('password').value
     formDataRelawan.fkTps = parseInt(fkTps)
     formDataRelawan.noHp = document.getElementById('noHp').value
-
-    console.log("form data relawan", formDataRelawan)
-
     const dataRelawanLv3 = JSON.stringify(formDataRelawan)
     const cekForm = validateFormRelawan(formDataRelawan)
     if (cekForm) {
@@ -253,6 +248,14 @@ async function isiTpsPemilih(tpsPemilih, kelurahan) {
     populateTps(tpsPemilih, [], "Pilih TPS Pemilih")
     tpsPemilih.disabled = true
   }
+}
+
+async function openConfirmationPage(nik) {
+  updatePemilih = await validasiNik(nik)
+  const dataPemilih = updatePemilih.pemilih
+
+  resetResult()
+  populateKorTps(dataPemilih[0].id, dataPemilih[0].nama, 0, dataPemilih[0].alamatKtp, 0);
 }
 
 
@@ -345,34 +348,29 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
         document.getElementById('formDataDiri').addEventListener('submit', function(event) {
             event.preventDefault();
     
-            const pemilih = new FormData(this);
-     
-            simpanDataPemilih(pemilih)
-
-    
+            const pemilihPemula = new FormData(this);
+            
+            simpanDataPemilih(pemilihPemula)
+            
             // Proceed with form submission via AJAX or any other logic
-            async function simpanDataPemilih(pemilih) {
+            async function simpanDataPemilih(pemilihPemula) {
               
               try {
                 const response = await fetch(`${apiUrl}/pemilih`, {
                     method: 'POST',
-                    body: pemilih, // Menggunakan FormData yang sudah mencakup semua data termasuk file
+                    body: pemilihPemula, // Menggunakan FormData yang sudah mencakup semua data termasuk file
                 });
         
                 const result = await response.json();
         
-                console.log("response: ", result)
                 if (result.success) {
-                    resetResult()
-                    showSuccess(result.data + ',' + ' Silahkan melakukan pencarian NIK kembali untuk melanjutkan pengisian data relawan !')
-                    console.log('Sukses menambah pemilih:', result);
+                    openConfirmationPage(dataRelawan.noKtp)
+                return
                 } else {
                     resetResult()
-                    console.error('Gagal menambah pemilih:', result.error);
                     showError(result.error)
                 }
             } catch (error) {
-                console.error('Error:', error);
                 showError('Terjadi kesalahan saat mengirim data')
             }
               
