@@ -1,6 +1,7 @@
-const apiUrl = 'https://formlv3.inimibarru.com/api'
+const apiUrl = 'http://localhost:3010'
 let dataRelawan = {}
 let formDataRelawan = {}
+let updatePemilih = null
 
 var apiRequest = function() {
 

@@ -31,6 +31,10 @@ function showNextStep(currentStep) {
       // Update step indicators
       document.getElementById('step-2-indicator').classList.remove('text-blue-600');
       document.getElementById('step-3-indicator').classList.add('text-blue-600');
+
+      document.getElementById('registerUser').innerHTML = `
+      <span class="text-green-600 text-xl font-semibold">Username anda: ${formDataRelawan.user}</span>
+      `
     }
   }
   function showPreviousStep(currentStep) {
@@ -106,6 +110,15 @@ function populateTps(selectElement, data, placeholder = "Pilih") {
     });
 }
 
+async function validasiUserName(username) {
+  const response = await apiRequest.apiGet('/validasi-user', {username})
+  if (response.success) {
+    return true
+  } else {
+    return false
+  }
+}
+
 function populateKorTps(id, nama, tps, alamat, namaTps) {
   
   formDataRelawan.fkPemilih = parseInt(id)
@@ -133,7 +146,7 @@ function populateKorTps(id, nama, tps, alamat, namaTps) {
     </ul>
     <div class=col-span-2>
         <label for="noHp" class="block text-sm font-medium text-gray-700">No WA / HP</label>
-        <input type="text" id="noHp" name="noHp" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+        <input type="text" id="noHp" name="noHp" placeholder="No HP/WA yang bisa dihubungi" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
     </div>
     <div class="col-span-2">
         <label for="tpsPenugasan" class="block text-sm font-medium text-gray-700">TPS Penugasan</label>
@@ -142,12 +155,14 @@ function populateKorTps(id, nama, tps, alamat, namaTps) {
         </select>
     </div>
     <div class=col-span-2>
-        <label for="username" class="block text-sm font-medium text-gray-700">User</label>
-        <input type="text" id="username" name="username" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+        <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+        <input type="text" id="username" name="username" placeholder="username" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+        <div class="mt-2 p-2" id="errorUser" name="errorUser""></div>
     </div>
     <div class=col-span-2>
         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-        <input type="password" id="password" name="password" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+        <input type="password" id="password" name="password" placeholder="minimal 5-8 digit password" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+        <div class="mt-2 p-2" id="errorPassword" name="errorPassword""></div>
     </div>
     <button type="button" id="kirimBtn" onclick="simpanRelawan()" class="mt-4 text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orage-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800">
       Kirim
@@ -189,9 +204,27 @@ async function simpanRelawan() {
     const fkTps = document.getElementById('tpsPenugasan').value
     formDataRelawan.user = document.getElementById('username').value
     formDataRelawan.password = document.getElementById('password').value
+    
     formDataRelawan.fkTps = parseInt(fkTps)
     formDataRelawan.noHp = document.getElementById('noHp').value
-    const dataRelawanLv3 = JSON.stringify(formDataRelawan)
+    const isValidUser = await validasiUserName(formDataRelawan.user)
+    if(!isValidUser) {
+      document.getElementById('errorUser').innerHTML = `
+       <span class="mt-2 text-red-600" >Username ${formDataRelawan.user} telah digunakan, silahkan coba Username yg lain</span>
+      `
+      return
+    } else {
+      document.getElementById('errorUser').innerHTML = ``
+    }
+    if(formDataRelawan.password.length < 6 || formDataRelawan.password.length > 8){
+      document.getElementById('errorPassword').innerHTML = `
+       <span class="mt-2 text-red-600" >Password minimal 6 dan maksimal 8 digit</span>
+      `
+      return
+    } else {
+      document.getElementById('errorUser').innerHTML = ``
+    }
+    
     const cekForm = validateFormRelawan(formDataRelawan)
     if (cekForm) {
       const response = await apiRequest.apiPost('/relawan-lv3', formDataRelawan);
@@ -266,6 +299,7 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
   try {
 
     const data = await validasiNik(nik)  
+
     const pemilih = data.pemilih;
 
     dataRelawan.noKtp = nik
@@ -422,7 +456,7 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
 
 
   } catch (error) {
-    console.log("Nik salah !")
+    console.log("Error : ", error)
   }
   
 
