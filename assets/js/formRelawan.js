@@ -5,11 +5,9 @@ function checkFormCompletion() {
     const kelurahan = document.getElementById('kelurahan').value;
     const korcam = document.getElementById('korcam').value;
     const korlu = document.getElementById('korlu').value;
-    //const tps = document.getElementById('tps').value;
-    // Check if all select elements have a value
+    
     const allFilled = provinsi && kabupaten && kecamatan && kelurahan && korcam && korlu;
-    //dataRelawan.fkTpsKtp = parseInt(tps)
-  
+     dataRelawan.kelurahan = document.getElementById('kelurahan').value;
     // Enable or disable the button based on the form completion
     document.getElementById('nextButton').disabled = !allFilled;
   }
@@ -243,6 +241,18 @@ function simpanDataRelawan(korTps) {
 
 }
 
+async function isiTpsPemilih(tpsPemilih, kelurahan) {
+  
+  const response = await apiRequest.apiGet("/tps", {kelurahan})
+  if (response.success) {
+    populateTps(tpsPemilih, response.data, "Pilih TPS Pemilih")
+    tpsPemilih.disabled = false
+  } else {
+    populateTps(tpsPemilih, [], "Pilih TPS Pemilih")
+    tpsPemilih.disabled = true
+  }
+}
+
 
 document.getElementById('formNik').addEventListener('submit', async function(event) {
   event.preventDefault();
@@ -268,7 +278,12 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
           <label for="nama" class="block text-sm font-medium text-gray-700">Nama</label>
           <input type="text" id="nama" name="nama" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
         </div>
-    
+        <div>
+          <label for="fkTpsKtp" class="block text-sm font-medium text-gray-700">TPS</label>
+          <select id="fkTpsKtp" name="fkTpsKtp" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+            <option value="">Pilih TPS</option>
+          </select>
+        </div>
         <div>
           <label for="tempatLahir" class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
           <input type="text" id="tempatLahir" name="tempatLahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
@@ -287,7 +302,7 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
             <option value="P">Perempuan</option>
           </select>
         </div>
-    
+        
         <div>
           <label for="noHp" class="block text-sm font-medium text-gray-700">No HP/WA</label>
           <input type="tel" id="noHp" name="noHp" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
@@ -317,30 +332,25 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
     
       </form>
         `;
+
+        const tpsPemilih = document.getElementById('fkTpsKtp');
+        const kelurahanPemilih = dataRelawan.kelurahan 
+
+        isiTpsPemilih(tpsPemilih, kelurahanPemilih)
+
     
         // Attach the event listener to the dynamically generated form
         document.getElementById('formDataDiri').addEventListener('submit', function(event) {
             event.preventDefault();
     
             const pemilih = new FormData(this);
-    
-            /*dataRelawan.nama = pemilih.get('nama')
-            dataRelawan.tempatLahir = pemilih.get('tempat-lahir')
-            dataRelawan.tglLahir = pemilih.get('tgl-lahir')
-            dataRelawan.jenisKelamin = pemilih.get('jenis-kelamin')
-            dataRelawan.noHp = pemilih.get('no-hp')
-            dataRelawan.alamatDomisili = pemilih.get('alamat')
-            dataRelawan.fileKtp = pemilih.get('foto-ktp')*/
-
-            console.log("data relawan", pemilih)
-    
+     
             simpanDataPemilih(pemilih)
 
     
             // Proceed with form submission via AJAX or any other logic
             async function simpanDataPemilih(pemilih) {
-              //const dataPemilih = typeof pemilih === 'string' ? JSON.parse(pemilih) : pemilih;
-
+              
               try {
                 const response = await fetch(`${apiUrl}/pemilih`, {
                     method: 'POST',
@@ -354,7 +364,6 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
                     resetResult()
                     showSuccess(result.data + ',' + ' Silahkan melakukan pencarian NIK kembali untuk melanjutkan pengisian data relawan !')
                     console.log('Sukses menambah pemilih:', result);
-                    //validasiNik(dataPemilih.noKtp)
                 } else {
                     resetResult()
                     console.error('Gagal menambah pemilih:', result.error);
@@ -362,20 +371,8 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan saat mengirim data');
+                showError('Terjadi kesalahan saat mengirim data')
             }
-    
-              /* const response = await apiRequest.apiPost('/pemilih', dataPemilih);
-    
-              resetResult()
-
-              if (response.success) {
-                validasiNik(dataPemilih.noKtp)
-              } else {
-                showError(response.error)
-              }
-
-              showPreviousStep(1)*/
               
             }
     
