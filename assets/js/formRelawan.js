@@ -216,7 +216,7 @@ async function simpanRelawan() {
     } else {
       document.getElementById('errorUser').innerHTML = ``
     }
-    if(formDataRelawan.password.length < 5 || formDataRelawan.password.length > 8){
+    if(formDataRelawan.password.length < 6 || formDataRelawan.password.length > 9){
       document.getElementById('errorPassword').innerHTML = `
        <span class="mt-2 text-red-600" >Password minimal 5 dan maksimal 8 digit</span>
       `
