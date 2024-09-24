@@ -1,4 +1,4 @@
-const apiUrl = 'http://localhost:3010'
+const apiUrl = 'https://formlv3.inimibarru.com/api'
 let dataRelawan = {}
 let formDataRelawan = {}
 let updatePemilih = null
