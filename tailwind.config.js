@@ -1,6 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./*.html"],
+  content: [
+    './*.html',
+    './assets/js/*.js',
+    './assets/js/*.min.js'
+  ],
+  safelist: [
+    'bg-orange-600'
+  ],
   theme: {
     extend: {},
   },
