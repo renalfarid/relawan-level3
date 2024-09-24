@@ -142,8 +142,8 @@ function populateKorTps(id, nama, tps, alamat, namaTps) {
         </select>
     </div>
     <div class=col-span-2>
-        <label for="user" class="block text-sm font-medium text-gray-700">User</label>
-        <input type="text" id="user" name="user" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
+        <label for="username" class="block text-sm font-medium text-gray-700">User</label>
+        <input type="text" id="username" name="username" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
     </div>
     <div class=col-span-2>
         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
@@ -189,12 +189,14 @@ function validateFormRelawan(formDataRelawan) {
 
 async function simpanRelawan() {
     const fkTps = document.getElementById('tpsPenugasan').value
-    formDataRelawan.user = document.getElementById('user').value
+    formDataRelawan.user = document.getElementById('username').value
     formDataRelawan.password = document.getElementById('password').value
     formDataRelawan.fkTps = parseInt(fkTps)
     formDataRelawan.noHp = document.getElementById('noHp').value
 
-    //const dataRelawanLv3 = JSON.stringify(formDataRelawan)
+    console.log("form data relawan", formDataRelawan)
+
+    const dataRelawanLv3 = JSON.stringify(formDataRelawan)
     const cekForm = validateFormRelawan(formDataRelawan)
     if (cekForm) {
       const response = await apiRequest.apiPost('/relawan-lv3', formDataRelawan);
