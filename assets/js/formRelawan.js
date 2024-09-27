@@ -36,7 +36,7 @@ function showNextStep(currentStep) {
       <span class="text-green-600 text-xl font-semibold">Username anda: ${formDataRelawan.user}</span>
       `
       document.getElementById('registerPassword').innerHTML = `
-      <span class="text-green-600 text-xl font-semibold">Username anda: ${formDataRelawan.password}</span>
+      <span class="text-green-600 text-xl font-semibold">Password anda: ${formDataRelawan.password}</span>
       `
     }
   }
