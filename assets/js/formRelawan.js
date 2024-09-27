@@ -327,20 +327,6 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
           <label for="tempatLahir" class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
           <input type="text" id="tempatLahir" name="tempatLahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
         </div>
-    
-        <div>
-          <label for="tglLahir" class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
-          <input type="date" id="tglLahir" name="tglLahir" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required />
-        </div>
-    
-        <div>
-          <label for="jenisKelamin" class="block text-sm font-medium text-gray-700">Jenis Kelamin</label>
-          <select id="jenisKelamin" name="jenisKelamin" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" required>
-            <option value="">Pilih Jenis Kelamin</option>
-            <option value="L">Laki-laki</option>
-            <option value="P">Perempuan</option>
-          </select>
-        </div>
         
         <div>
           <label for="noHp" class="block text-sm font-medium text-gray-700">No HP/WA</label>
