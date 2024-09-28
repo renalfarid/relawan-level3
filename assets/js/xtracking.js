@@ -2,10 +2,11 @@ const api = apiRequest;
 
 // Function to track page visit
 function trackPageVisit() {
-    const pageUrl = window.location.href; // Get the current page URL
+    const pageUrl = window.location.href;
+    const agent = navigator.userAgent;
 
     // Call the API with the URL of the page the user visited
-    api.apiPost('/xtracking', { url: pageUrl })
+    api.apiPost('/xtracking', { url: pageUrl, agent: agent })
         .then(response => {
             console.log("Tracking saved");
         })
