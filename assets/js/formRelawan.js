@@ -124,7 +124,7 @@ async function validasiUserName(username) {
   }
 }
 
-function populateKorTps(id, nama, tps, alamat, namaTps) {
+function populateKorTps(id, nama, alamat) {
   
   formDataRelawan.fkPemilih = parseInt(id)
   formDataRelawan.nama = nama
@@ -134,7 +134,6 @@ function populateKorTps(id, nama, tps, alamat, namaTps) {
   formDataRelawan.status =1
   
   formDataRelawan.alamat = alamat
-  formDataRelawan.namaTps = namaTps
   formDataRelawan.kelurahan = document.getElementById('kelurahan').value
   
   const korTps = JSON.stringify(formDataRelawan)
@@ -302,7 +301,7 @@ async function openConfirmationPage(nik) {
   const dataPemilih = updatePemilih.pemilih
 
   resetResult()
-  populateKorTps(dataPemilih[0].id, dataPemilih[0].nama, 0, dataPemilih[0].alamatKtp, 0);
+  populateKorTps(dataPemilih[0].id, dataPemilih[0].nama, dataPemilih[0].alamatKtp);
 }
 
 
@@ -443,7 +442,7 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
         </tbody>
     </table>
     <div class="mt-2 flex justify-center items-center">
-     <button type="button" id="pilihPemilihBtn" onclick="populateKorTps('${pemilih[0].id}', '${pemilih[0].nama}', '${pemilih[0].tps}', '${pemilih[0].alamatKtp}', '${pemilih[0].namaTps}')" class="flex justify-items-center text-white bg-orange-600 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+     <button type="button" id="pilihPemilihBtn" onclick="populateKorTps('${pemilih[0].id}', '${pemilih[0].nama}', '${pemilih[0].alamatKtp}')" class="flex justify-items-center text-white bg-orange-600 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
         Pilih
         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
