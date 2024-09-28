@@ -11,6 +11,8 @@ function checkFormCompletion() {
     // Enable or disable the button based on the form completion
     document.getElementById('nextButton').disabled = !allFilled;
   }
+
+
   
 function showNextStep(currentStep) {
     if (currentStep === 1) {
@@ -205,7 +207,16 @@ function validateFormRelawan(formDataRelawan) {
 
 async function simpanRelawan() {
     const fkTps = document.getElementById('tpsPenugasan').value
-    formDataRelawan.user = document.getElementById('username').value
+    const usernameInput = document.getElementById('username');
+    let username = usernameInput.value;
+
+    // Mengubah ke huruf kecil dan menghapus semua spasi
+    username = username.toLowerCase().replace(/\s+/g, '');
+
+    // Set kembali nilai input setelah modifikasi
+    usernameInput.value = username;
+    
+    formDataRelawan.user = usernameInput.value
     formDataRelawan.password = document.getElementById('password').value
     
     formDataRelawan.fkTps = parseInt(fkTps)
