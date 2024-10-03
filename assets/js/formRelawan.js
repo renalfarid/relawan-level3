@@ -404,7 +404,7 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
                     showError(result.error)
                 }
             } catch (error) {
-                showError('Terjadi kesalahan saat mengirim data')
+                showError('Gagal input data pemilih, periksa NIK')
             }
               
             }
