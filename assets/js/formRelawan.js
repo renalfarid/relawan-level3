@@ -383,6 +383,9 @@ document.getElementById('formNik').addEventListener('submit', async function(eve
     
             const pemilihPemula = new FormData(this);
             
+            // Add kelurahanPemilih to the FormData
+            pemilihPemula.append('fkKelurahanDomisili', kelurahanPemilih);
+
             simpanDataPemilih(pemilihPemula)
             
             // Proceed with form submission via AJAX or any other logic
