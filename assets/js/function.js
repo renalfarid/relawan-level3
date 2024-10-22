@@ -2,6 +2,7 @@ const apiUrl = 'https://formlv3.inimibarru.com/api'
 let dataRelawan = {}
 let formDataRelawan = {}
 let updatePemilih = null
+let idKelurahan = 0
 
 var apiRequest = function() {
 
